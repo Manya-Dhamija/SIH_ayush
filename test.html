@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Dynamic Counter</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .container { max-width: 800px; margin: 0 auto; }
+        input { padding: 10px; width: 300px; margin-right: 10px; }
+        button { padding: 10px 20px; background: #007bff; color: white; border: none; cursor: pointer; }
+        .results { margin-top: 20px; }
+        .result-item { padding: 10px; border: 1px solid #ddd; margin: 5px 0; background: #f9f9f9; }
+        .count { font-weight: bold; color: #007bff; margin: 10px 0; }
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>ICD-11 Dynamic Counter Test</h1>
+        <input type="text" id="search-input" placeholder="Search for medical condition...">
+        <button id="search-btn">Search</button>
+        
+        <div class="count" id="results-count"></div>
+        <div class="results" id="results-container"></div>
+    </div>
+
+    <script>
+        class SimpleSearchApp {
+            constructor() {
+                this.searchInput = document.getElementById('search-input');
+                this.searchBtn = document.getElementById('search-btn');
+                this.resultsCount = document.getElementById('results-count');
+                this.resultsContainer = document.getElementById('results-container');
+                
+                this.searchBtn.addEventListener('click', () => this.search());
+                this.searchInput.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter') this.search();
+                });
+            }
+            
+            async search() {
+                const query = this.searchInput.value.trim();
+                if (!query) return;
+                
+                this.searchBtn.textContent = 'Searching...';
+                this.searchBtn.disabled = true;
+                this.resultsCount.textContent = 'Searching...';
+                this.resultsContainer.innerHTML = '';
+                
+                try {
+                    const response = await fetch(`/api/search?q=${encodeURIComponent(query)}`);
+                    const data = await response.json();
+                    
+                    console.log('API Response:', data);
+                    
+                    const results = data.destinationEntities || [];
+                    const count = results.length;
+                    
+                    // Update count dynamically
+                    this.resultsCount.textContent = `${count} result${count !== 1 ? 's' : ''} found for "${query}"`;
+                    
+                    // Display results
+                    this.resultsContainer.innerHTML = '';
+                    results.forEach((item, index) => {
+                        const div = document.createElement('div');
+                        div.className = 'result-item';
+                        
+                        const title = item.title || item.label || 'Unknown Condition';
+                        const code = item.theCode || item.code || 'No Code';
+                        const definition = item.definition || '';
+                        
+                        let html = `<strong>${title}</strong><br><small>Code: ${code}</small>`;
+                        
+                        // Only add definition if it exists and has content
+                        if (definition && definition.trim().length > 0) {
+                            html += `<br><em>${definition.substring(0, 100)}${definition.length > 100 ? '...' : ''}</em>`;
+                        }
+                        
+                        div.innerHTML = html;
+                        this.resultsContainer.appendChild(div);
+                    });
+                    
+                } catch (error) {
+                    console.error('Search error:', error);
+                    this.resultsCount.textContent = 'Search failed';
+                } finally {
+                    this.searchBtn.textContent = 'Search';
+                    this.searchBtn.disabled = false;
+                }
+            }
+        }
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            new SimpleSearchApp();
+        });
+    </script>
+</body>
+</html>

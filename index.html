@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ICD-11 Medical Coding Assistant</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <i class="fas fa-heartbeat"></i>
+                <span>ICD-11 Assistant</span>
+            </div>
+            <div class="nav-status">
+                <span id="connection-status" class="status-indicator">
+                    <i class="fas fa-circle"></i>
+                    <span id="status-text">Connecting...</span>
+                </span>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <header class="hero-section">
+            <h1><i class="fas fa-search-plus"></i> Medical Code Search</h1>
+            <p class="subtitle">Find accurate ICD-11 diagnostic codes instantly</p>
+        </header>
+
+        <main class="main-content">
+            <!-- Search Section -->
+            <section class="search-section">
+                <div class="search-card">
+                    <div class="search-header">
+                        <h2><i class="fas fa-stethoscope"></i> Search Medical Conditions</h2>
+                        <p>Enter symptoms, diseases, or medical terms</p>
+                    </div>
+                    
+                    <div class="search-box">
+                        <div class="input-group">
+                            <i class="fas fa-search search-icon"></i>
+                            <input type="text" 
+                                   id="medical-search" 
+                                   placeholder="e.g., diabetes, tuberculosis, hypertension..."
+                                   autocomplete="off"
+                                   spellcheck="false">
+                            <button id="search-btn" class="search-button">
+                                <span class="btn-text">Search</span>
+                                <i class="fas fa-arrow-right btn-icon"></i>
+                            </button>
+                        </div>
+                        <div class="search-suggestions">
+                            <span class="suggestion-tag" data-term="diabetes">Diabetes</span>
+                            <span class="suggestion-tag" data-term="hypertension">Hypertension</span>
+                            <span class="suggestion-tag" data-term="tuberculosis">Tuberculosis</span>
+                            <span class="suggestion-tag" data-term="pneumonia">Pneumonia</span>
+                        </div>
+                        
+                        <!-- Traditional Medicine Filter -->
+                        <div class="filter-section">
+                            <div class="filter-toggle">
+                                <input type="checkbox" id="tm-filter" checked>
+                                <label for="tm-filter" class="tm-label">
+                                    <i class="fas fa-leaf"></i>
+                                    <span>Include Traditional Medicine</span>
+                                    <small>(Ayurveda, TCM, etc.)</small>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Loading Section -->
+            <section id="loading-section" class="loading-section hidden">
+                <div class="loading-card">
+                    <div class="loading-animation">
+                        <div class="pulse-ring"></div>
+                        <div class="pulse-ring pulse-ring-delay-1"></div>
+                        <div class="pulse-ring pulse-ring-delay-2"></div>
+                        <i class="fas fa-heartbeat loading-icon"></i>
+                    </div>
+                    <h3>Searching Medical Database</h3>
+                    <p>Finding the most accurate ICD-11 codes...</p>
+                </div>
+            </section>
+
+            <!-- Results Section -->
+            <section id="results-section" class="results-section hidden">
+                <div class="results-header">
+                    <h2><i class="fas fa-list-alt"></i> Search Results</h2>
+                    <span id="results-count" class="results-count"></span>
+                </div>
+                <div id="results-container" class="results-container">
+                    <!-- Results will be populated here -->
+                </div>
+            </section>
+
+            <!-- Selected Code Section -->
+            <section id="selected-section" class="selected-section hidden">
+                <div class="selected-card">
+                    <div class="selected-header">
+                        <h2><i class="fas fa-check-circle"></i> Selected Code</h2>
+                        <button id="clear-selection" class="clear-btn">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div id="selected-content" class="selected-content">
+                        <!-- Selected code details will be shown here -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Error Section -->
+            <section id="error-section" class="error-section hidden">
+                <div class="error-card">
+                    <div class="error-icon">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <h3>Connection Issue</h3>
+                    <p id="error-message">Unable to connect to the medical database</p>
+                    <button id="retry-btn" class="retry-button">
+                        <i class="fas fa-redo"></i>
+                        Try Again
+                    </button>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <p><i class="fas fa-shield-alt"></i> Powered by WHO ICD-11 API</p>
+            <p>Professional medical coding assistance</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="app.js"></script>
+</body>
+</html>
